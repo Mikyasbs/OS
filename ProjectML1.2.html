@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Main Strategy | Options Evaluator</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000; 
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #111;
+      position: relative;
+    }
+    /* Logo with white border, same as page one */
+    .logo-box {
+      width: 60px;
+      height: 60px;
+      border: 2px solid #fff; /* white square border */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-text {
+      font-size: 1.6em;
+      font-weight: bold;
+      color: #FF4500; /* "O" in orange */
+    }
+    .logo-text span {
+      color: #fff; /* "S" in white */
+    }
+
+    .hamburger {
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+      position: relative;
+    }
+    .hamburger-bar {
+      position: absolute;
+      width: 100%;
+      height: 3px;
+      background-color: #fff;
+      left: 0;
+      transition: 0.3s;
+    }
+    .bar1 { top: 4px; }
+    .bar2 { top: 11px; }
+    .bar3 { top: 18px; }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background-color: #222;
+      border: 1px solid #333;
+      border-radius: 4px;
+      min-width: 150px;
+      z-index: 999;
+    }
+    .dropdown a {
+      display: block;
+      padding: 10px;
+      color: #fff;
+      text-decoration: none;
+      border-bottom: 1px solid #333;
+    }
+    .dropdown a:hover {
+      background-color: #333;
+    }
+    .dropdown a:last-child {
+      border-bottom: none;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      background-color: #111;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 1em;
+    }
+    .form-group {
+      flex: 1;
+      min-width: 180px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+    .form-group:last-child {
+      margin-right: 0;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      background: #222;
+      border: 1px solid #333;
+      color: #fff;
+      border-radius: 4px;
+    }
+    button.submit-btn {
+      background-color: #FF4500;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 1em;
+      margin-top: 10px;
+    }
+    button.submit-btn:hover {
+      opacity: 0.85;
+    }
+
+    #results {
+      margin-top: 20px;
+      background-color: #222;
+      padding: 15px;
+      border-radius: 6px;
+    }
+    hr {
+      border: 0;
+      height: 1px;
+      background: #333;
+      margin: 10px 0;
+    }
+
+    /* Range bar for middle column (High/Med/Low) */
+    .range-bar {
+      position: relative;
+      background: #333;
+      height: 6px;
+      width: 80px;
+      border-radius: 3px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .range-marker {
+      position: absolute;
+      top: -3px;
+      width: 8px;
+      height: 12px;
+      background: #fff;
+      border-radius: 2px;
+    }
+
+    .green-text { color: #6AFB92; font-weight: bold; }
+    .yellow-text { color: #FFD700; font-weight: bold; }
+    .red-text { color: #FF6E6E; font-weight: bold; }
+
+    /* Three-column layout for EVALUATION RESULTS:
+       Left = metric name + user input
+       Middle = range bar + label "High/Med/Low"
+       Right = short-term indicator "Good/Bad/Medium"
+    */
+    .eval-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .eval-left {
+      flex: 1; /* metric name + user input */
+      min-width: 150px;
+    }
+    .eval-middle {
+      flex: 1; /* bar + label */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 120px;
+    }
+    .eval-right {
+      flex: 1; /* indicator */
+      min-width: 100px;
+      text-align: right;
+      font-weight: bold;
+    }
+
+    /* Risk/Reward container */
+    .risk-reward-container {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 1em;
+    }
+    .rr-column {
+      flex: 1;
+      min-width: 200px;
+      margin-right: 20px;
+      margin-bottom: 10px;
+    }
+    .rr-column:last-child {
+      margin-right: 0;
+    }
+
+    .asterisk {
+      color: #FFD700;
+      cursor: pointer;
+      position: relative;
+      margin-left: 4px;
+    }
+    .asterisk-note {
+      display: none;
+      position: absolute;
+      top: 20px;
+      left: 0;
+      background: #333;
+      color: #fff;
+      padding: 6px;
+      border-radius: 4px;
+      width: 200px;
+      font-size: 0.9em;
+      z-index: 999;
+    }
+    .asterisk:hover .asterisk-note {
+      display: block;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <!-- LOGO with white border -->
+    <div class="logo-box">
+      <div class="logo-text">O<span>S</span></div>
+    </div>
+    <!-- Hamburger dropdown -->
+    <div class="hamburger" onclick="toggleDropdown()">
+      <div class="hamburger-bar bar1"></div>
+      <div class="hamburger-bar bar2"></div>
+      <div class="hamburger-bar bar3"></div>
+    </div>
+    <div class="dropdown" id="dropdownMenu">
+      <a href="ProjectML1.html">Description</a>
+      <a href="ProjectML1.2.html">Main Strategy</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>Main Strategy Evaluator</h2>
+    <form id="optionsForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Option Type (call/put):</label>
+          <input type="text" id="option_type" required>
+        </div>
+        <div class="form-group">
+          <label>Strike Price:</label>
+          <input type="number" step="0.01" id="strike_price" required>
+        </div>
+        <div class="form-group">
+          <label>Premium (cost/share):</label>
+          <input type="number" step="0.01" id="premium" required>
+        </div>
+        <div class="form-group">
+          <label>Number of Contracts:</label>
+          <input type="number" step="1" id="contracts" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Days to Expiration:</label>
+          <input type="number" id="days_to_exp" required>
+        </div>
+        <div class="form-group">
+          <label>Delta:</label>
+          <input type="number" step="0.01" id="delta" required>
+        </div>
+        <div class="form-group">
+          <label>Theta:</label>
+          <input type="number" step="0.001" id="theta" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>IV:</label>
+          <input type="number" step="0.01" id="iv" required>
+        </div>
+        <div class="form-group">
+          <label>IV Rank (0-100):</label>
+          <input type="number" step="1" id="iv_rank" required>
+        </div>
+        <div class="form-group">
+          <label>ATR:</label>
+          <input type="number" step="0.01" id="atr" required>
+        </div>
+        <div class="form-group">
+          <label>Open Interest:</label>
+          <input type="number" step="1" id="open_interest" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>SMA Trend (Bullish/Bearish/Sideways):</label>
+          <select id="sma_trend">
+            <option value="bullish">Bullish</option>
+            <option value="bearish">Bearish</option>
+            <option value="sideways">Sideways</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn">Evaluate</button>
+    </form>
+
+    <div id="results"></div>
+  </div>
+
+  <script>
+    function toggleDropdown() {
+      const menu = document.getElementById('dropdownMenu');
+      if (menu.style.display === 'block') {
+        menu.style.display = 'none';
+      } else {
+        menu.style.display = 'block';
+      }
+    }
+
+    // Marker positions for High/Med/Low
+    function rangeMarkerPos(label) {
+      if (label === "High") return 90;
+      if (label === "Medium") return 50;
+      return 10; // "Low"
+    }
+    // The short-term label: High => Good, Medium => Medium, Low => Bad
+    function shortTermLabel(label) {
+      if (label === "High") return "Good";
+      if (label === "Medium") return "Medium";
+      return "Bad";
+    }
+    // Color classes
+    function colorClass(label) {
+      if (label === "High" || label === "Favorable") return "green-text";
+      if (label === "Medium" || label === "Neutral") return "yellow-text";
+      if (label === "Low" || label === "Risky") return "red-text";
+      return "";
+    }
+
+    // Evaluate each metric for a short-term volatility approach:
+    function evalDelta(delta, type) {
+      if (type === "call") {
+        if (delta >= 0.60) return "High"; else if (delta >= 0.30) return "Medium"; else return "Low";
+      } else {
+        if (delta <= -0.60) return "High"; else if (delta <= -0.30) return "Medium"; else return "Low";
+      }
+    }
+    function evalTheta(th) {
+      if (th > -0.05) return "High"; else if (th >= -0.10) return "Medium"; else return "Low";
+    }
+    function evalIV(iv) {
+      if (iv > 0.50) return "High"; else if (iv >= 0.30) return "Medium"; else return "Low";
+    }
+    function evalIVRank(rk) {
+      if (rk > 70) return "High"; else if (rk >= 30) return "Medium"; else return "Low";
+    }
+    function evalATR(a) {
+      if (a > 2.0) return "High"; else if (a >= 1.0) return "Medium"; else return "Low";
+    }
+    function evalOI(oi) {
+      if (oi > 500) return "High"; else if (oi >= 200) return "Medium"; else return "Low";
+    }
+    function evalDays(d) {
+      if (d >= 5) return "High"; else if (d >= 2) return "Medium"; else return "Low";
+    }
+    function evalSMA(trend, type) {
+      if (trend === "sideways") return "Medium";
+      if (type === "call") {
+        return (trend === "bullish") ? "High" : "Low";
+      } else {
+        return (trend === "bearish") ? "High" : "Low";
+      }
+    }
+
+    // Weighted Score
+    function weightedScore(evals) {
+      let total = 0;
+      // Delta => +2
+      if (evals.delta === "High") total += 2;
+      else if (evals.delta === "Medium") total += 1;
+      // Others => +1
+      ["theta","iv","ivRank","atr","openInterest","daysToExp","smaTrend"].forEach(key=>{
+        if (evals[key] === "High") total += 1;
+        else if (evals[key] === "Medium") total += 0.5;
+      });
+      return total;
+    }
+    function finalRating(score) {
+      if (score >= 6) return "Favorable";
+      else if (score >= 3) return "Neutral";
+      return "Risky";
+    }
+    // Holding suggestion
+    function holdingSuggestion(rating) {
+      if (rating === "Risky") {
+        return `Hold no more than 1 day<span class="asterisk">*<span class="asterisk-note">Consider day-trading or small position size to limit risk.</span></span>`;
+      } else if (rating === "Neutral") {
+        return `Hold 1-3 days<span class="asterisk">*<span class="asterisk-note">Possible short swing, but watch for time decay.</span></span>`;
+      } else {
+        return `Hold 1-7 days<span class="asterisk">*<span class="asterisk-note">If momentum stays strong, you can hold up to a week.</span></span>`;
+      }
+    }
+
+    document.getElementById('optionsForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+
+      const optionType = document.getElementById('option_type').value.trim().toLowerCase();
+      if (optionType !== "call" && optionType !== "put") {
+        resultsDiv.innerHTML = `<p class="red-text">Error: Option type must be "call" or "put".</p>`;
+        return;
+      }
+      const strike = parseFloat(document.getElementById('strike_price').value);
+      const premium = parseFloat(document.getElementById('premium').value);
+      const contracts = parseInt(document.getElementById('contracts').value, 10);
+
+      const dte = parseInt(document.getElementById('days_to_exp').value, 10);
+      const delta = parseFloat(document.getElementById('delta').value);
+      const theta = parseFloat(document.getElementById('theta').value);
+      const iv = parseFloat(document.getElementById('iv').value);
+      const ivRank = parseFloat(document.getElementById('iv_rank').value);
+      const atr = parseFloat(document.getElementById('atr').value);
+      const oi = parseFloat(document.getElementById('open_interest').value);
+      const smaTrend = document.getElementById('sma_trend').value;
+
+      // Evaluate
+      const deltaVal = evalDelta(delta, optionType);
+      const thetaVal = evalTheta(theta);
+      const ivVal = evalIV(iv);
+      const ivRankVal = evalIVRank(ivRank);
+      const atrVal = evalATR(atr);
+      const oiVal = evalOI(oi);
+      const dteVal = evalDays(dte);
+      const smaVal = evalSMA(smaTrend, optionType);
+
+      const evals = {
+        delta: deltaVal,
+        theta: thetaVal,
+        iv: ivVal,
+        ivRank: ivRankVal,
+        atr: atrVal,
+        openInterest: oiVal,
+        daysToExp: dteVal,
+        smaTrend: smaVal
+      };
+
+      const score = weightedScore(evals);
+      const rating = finalRating(score);
+
+      let html = `<h3>Evaluation Results</h3>`;
+
+      // Build the 3-column layout for each metric
+      function buildEvalRow(name, userVal, labelVal) {
+        // userVal = the input user gave (like delta=0.60), so user sees it
+        // labelVal = High/Med/Low
+        const mPos = rangeMarkerPos(labelVal);
+        const cClass = colorClass(labelVal);
+        const shortLabel = shortTermLabel(labelVal);
+
+        return `
+          <div class="eval-row">
+            <div class="eval-left">
+              <strong>${name}:</strong> ${userVal}
+            </div>
+            <div class="eval-middle">
+              <div class="range-bar">
+                <div class="range-marker" style="left:${mPos}%;"></div>
+              </div>
+              <span class="${cClass}" style="margin-left:6px;">${labelVal}</span>
+            </div>
+            <div class="eval-right">
+              ${shortLabel}
+            </div>
+          </div>
+        `;
+      }
+
+      html += buildEvalRow("Delta", delta.toFixed(2), deltaVal);
+      html += buildEvalRow("Theta", theta.toFixed(3), thetaVal);
+      html += buildEvalRow("IV", iv.toFixed(2), ivVal);
+      html += buildEvalRow("IV Rank", ivRank.toFixed(0), ivRankVal);
+      html += buildEvalRow("ATR", atr.toFixed(2), atrVal);
+      html += buildEvalRow("Open Int", oi.toFixed(0), oiVal);
+      html += buildEvalRow("Days to Exp", dte, dteVal);
+      html += buildEvalRow("SMA Trend", smaTrend, smaVal);
+
+      html += `<hr>`;
+      html += `<p><strong>Total Weighted Score:</strong> ${score.toFixed(1)}</p>`;
+      html += `<p><strong>Overall Rating:</strong> <span class="${colorClass(rating)}">${rating}</span></p>`;
+      html += `<p><strong>Suggested Holding:</strong> ${holdingSuggestion(rating)}</p>`;
+
+      // RISK to REWARD
+      html += `<hr><h3>Risk to Reward Ratio</h3>`;
+      const totalCost = premium * 100 * contracts;
+      const stopRisk = 0.10 * totalCost; // 10% risk
+      const stopValue = totalCost - stopRisk; 
+      const takeProfit = totalCost + stopRisk * 2.5;
+
+      // Stop Value => red
+      // Target Value => green
+      html += `
+        <div class="risk-reward-container">
+          <div class="rr-column">
+            <p><strong>Option Cost (per contract):</strong> $${(premium*100).toFixed(2)}</p>
+            <p><strong># of Contracts:</strong> ${contracts}</p>
+            <p><strong>Total Position Cost:</strong> $${totalCost.toFixed(2)}</p>
+            <p><strong>Strike Price:</strong> $${strike.toFixed(2)}</p>
+            <p><strong>Expiration (Days):</strong> ${dte}</p>
+          </div>
+          <div class="rr-column">
+            <p><strong>Stop Value (10%):</strong> 
+              <span style="color:red;font-weight:bold;">$${stopValue.toFixed(2)}</span>
+            </p>
+            <p><strong>Target Value (2.5× risk):</strong> 
+              <span style="color:green;font-weight:bold;">$${takeProfit.toFixed(2)}</span>
+            </p>
+          </div>
+        </div>
+      `;
+
+      resultsDiv.innerHTML = html;
+    });
+  </script>
+</body>
+</html>

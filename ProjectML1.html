@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Description | Options Strategies</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000; /* black */
+      color: #fff;           /* white */
+      font-family: Arial, sans-serif;
+    }
+    /* Top bar with hamburger menu for navigation */
+    .top-bar {
+      display: flex;
+      justify-content: flex-end; /* Logo is centered below, so top bar only has menu on the right */
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #111;
+      position: relative;
+    }
+    .hamburger {
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+      position: relative;
+    }
+    .hamburger-bar {
+      position: absolute;
+      width: 100%;
+      height: 3px;
+      background-color: #fff;
+      left: 0;
+      transition: 0.3s;
+    }
+    .bar1 { top: 4px; }
+    .bar2 { top: 11px; }
+    .bar3 { top: 18px; }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: 60px; /* below top bar */
+      right: 20px;
+      background-color: #222;
+      border: 1px solid #333;
+      border-radius: 4px;
+      min-width: 150px;
+      z-index: 999;
+    }
+    .dropdown a {
+      display: block;
+      padding: 10px;
+      color: #fff;
+      text-decoration: none;
+      border-bottom: 1px solid #333;
+    }
+    .dropdown a:hover {
+      background-color: #333;
+    }
+    .dropdown a:last-child {
+      border-bottom: none;
+    }
+
+    /* LOGO - extra big, centered */
+    .logo-box {
+      margin: 40px auto 0 auto; 
+      width: 120px;
+      height: 120px;
+      border: 2px solid #fff;  /* thin white border */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-text {
+      font-size: 3em; 
+      font-weight: bold;
+      color: #FF4500; /* "O" in orange */
+    }
+    .logo-text span {
+      color: #fff;    /* "S" in white */
+    }
+
+    /* Main content container */
+    .content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center; /* center the text for a simpler look */
+    }
+    h1 {
+      margin-top: 40px; /* extra space from the logo */
+      font-size: 2em;
+      color: #FF4500;
+    }
+    ul {
+      list-style-type: disc;
+      text-align: left;
+      margin: 1em auto;
+      padding-left: 1.5em;
+      line-height: 1.6em;
+      max-width: 600px;
+    }
+    .start-btn {
+      display: inline-block;
+      margin-top: 2em;
+      padding: 12px 24px;
+      background-color: #FF4500; 
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    .start-btn:hover {
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+  <!-- TOP BAR with hamburger only -->
+  <div class="top-bar">
+    <div class="hamburger" onclick="toggleDropdown()">
+      <div class="hamburger-bar bar1"></div>
+      <div class="hamburger-bar bar2"></div>
+      <div class="hamburger-bar bar3"></div>
+    </div>
+    <div class="dropdown" id="dropdownMenu">
+      <a href="ProjectML1.html">Description</a>
+      <a href="ProjectML1.2.html">Main Strategy</a>
+    </div>
+  </div>
+
+  <!-- EXTRA BIG LOGO, CENTERED -->
+  <div class="logo-box">
+    <div class="logo-text">O<span>S</span></div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+    <h1>Description</h1>
+    <p>
+      Below is a short overview of our short-term, volatility-focused trading approach:
+    </p>
+
+    <ul>
+      <li><strong>High Volatility Focus</strong>: We seek options with higher implied volatility for rapid price swings.</li>
+      <li><strong>Short Holding Period</strong>: Positions typically last from a few hours to a few days.</li>
+      <li><strong>Stop-Loss & Target</strong>: We aim for 10% risk and at least 2.5× potential reward.</li>
+      <li><strong>Overnight Holds</strong>: Reserved for “Favorable” setups. Riskier trades often exit same day.</li>
+      <li><strong>Metric-Based Decisions</strong>: Delta, Theta, IV, ATR, and Open Interest guide our entries.</li>
+      <li><strong>Review & Refine</strong>: Tracking results helps improve over time and control emotions.</li>
+    </ul>
+
+    <p>Ready to try the main strategy evaluator? Click below!</p>
+
+    <button class="start-btn" onclick="location.href='ProjectML1.2.html'">
+      Ready to Start
+    </button>
+  </div>
+
+  <script>
+    function toggleDropdown() {
+      const menu = document.getElementById('dropdownMenu');
+      if (menu.style.display === 'block') {
+        menu.style.display = 'none';
+      } else {
+        menu.style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>
