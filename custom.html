@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Custom Model - Option Calculator</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <!-- Custom Logo -->
+      <div class="logo">
+        <svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="0" width="60" height="60" fill="none" stroke="white" stroke-width="2" />
+          <text x="5" y="45" font-size="40" fill="red" font-family="Arial, sans-serif">O</text>
+          <text x="30" y="45" font-size="40" fill="white" font-family="Arial, sans-serif">s</text>
+        </svg>
+      </div>
+    </div>
+    <div class="header-right">
+      <button id="menuToggle" onclick="toggleMenu()">&#9776;</button>
+    </div>
+  </header>
+  
+  <!-- Sidebar Menu -->
+  <div id="sidebar" class="sidebar">
+    <button id="closeSidebar" onclick="toggleMenu()">×</button>
+    <nav>
+      <ul>
+        <li><a href="simple.html" class="menu-link">Simple Model</a></li>
+        <li><a href="advanced.html" class="menu-link">Advanced Model</a></li>
+        <li><a href="custom.html" class="menu-link">Custom Model</a></li>
+        <li><a href="explanation.html" class="menu-link">Model Explanation</a></li>
+        <li>
+          <details>
+            <summary>Daily Notes</summary>
+            <div id="notesContainer">
+              <ul id="notesList"></ul>
+              <input type="text" id="noteInput" placeholder="Add a new note" />
+              <button onclick="addNote()">Add Note</button>
+            </div>
+          </details>
+        </li>
+        <li class="spacer"></li>
+        <li>
+          <button id="darkModeButton" onclick="toggleTheme()">Dark Mode</button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  
+  <main class="container">
+    <section class="model-section glass-panel">
+      <h3>Custom (Weighted) Model</h3>
+      <form id="customForm" class="form-grid">
+        <!-- Standard Inputs -->
+        <div class="form-item">
+          <label for="c_price">Option Price (P):</label>
+          <input type="number" id="c_price" step="0.01" value="5" required />
+        </div>
+        <div class="form-item">
+          <label for="c_theta">Absolute Theta (|Θ|):</label>
+          <input type="number" id="c_theta" step="0.01" value="0.04" required />
+        </div>
+        <div class="form-item">
+          <label for="c_iv">Implied Volatility (IV, %):</label>
+          <input type="number" id="c_iv" step="0.1" value="30" required />
+        </div>
+        <div class="form-item">
+          <label for="c_contracts">Number of Contracts:</label>
+          <input type="number" id="c_contracts" step="1" value="1" required />
+        </div>
+        <div class="form-item">
+          <label for="c_optionType">Option Type:</label>
+          <select id="c_optionType">
+            <option value="call">Call</option>
+            <option value="put">Put</option>
+          </select>
+        </div>
+        <div class="form-item">
+          <label for="c_transaction">Transaction:</label>
+          <select id="c_transaction">
+            <option value="buy">Buy</option>
+            <option value="sell">Sell</option>
+          </select>
+        </div>
+        <!-- Weighted Inputs -->
+        <div class="form-item">
+          <label for="c_delta">Delta (Δ):</label>
+          <input type="number" id="c_delta" step="0.01" value="0.5" required />
+        </div>
+        <div class="form-item weight-item">
+          <label for="w_delta">Delta Weight:</label>
+          <input type="range" id="w_delta" min="0.1" max="3" step="0.1" value="1"
+                 oninput="document.getElementById('w_delta_val').innerText = this.value; updateSensitivityChart();" />
+          <span class="weightValue" id="w_delta_val">1</span>
+        </div>
+        <div class="form-item">
+          <label for="c_atr">ATR (Average True Range):</label>
+          <input type="number" id="c_atr" step="0.01" value="2" required />
+        </div>
+        <div class="form-item weight-item">
+          <label for="w_atr">ATR Weight:</label>
+          <input type="range" id="w_atr" min="0.1" max="3" step="0.1" value="1"
+                 oninput="document.getElementById('w_atr_val').innerText = this.value;" />
+          <span class="weightValue" id="w_atr_val">1</span>
+        </div>
+        <div class="form-item">
+          <label for="c_stock">Stock Price (S):</label>
+          <input type="number" id="c_stock" step="0.01" value="50" required />
+        </div>
+        <div class="form-item weight-item">
+          <label for="w_ratio">Ratio Weight:</label>
+          <input type="range" id="w_ratio" min="0.1" max="3" step="0.1" value="1"
+                 oninput="document.getElementById('w_ratio_val').innerText = this.value;" />
+          <span class="weightValue" id="w_ratio_val">1</span>
+        </div>
+        <div class="form-item">
+          <label for="c_optionPrice">Option Price for Ratio (P):</label>
+          <input type="number" id="c_optionPrice" step="0.01" value="5" required />
+        </div>
+        <div class="form-item">
+          <label for="c_oi">Open Interest (OI):</label>
+          <input type="number" id="c_oi" step="1" value="100" required />
+        </div>
+        <div class="form-item weight-item">
+          <label for="w_oi">OI Weight:</label>
+          <input type="range" id="w_oi" min="0.1" max="3" step="0.1" value="1"
+                 oninput="document.getElementById('w_oi_val').innerText = this.value;" />
+          <span class="weightValue" id="w_oi_val">1</span>
+        </div>
+        <div class="form-item">
+          <label for="c_tdays">Days Till Expiration (T_days):</label>
+          <input type="number" id="c_tdays" step="1" value="30" required />
+        </div>
+        <div class="form-item weight-item">
+          <label for="w_tdays">Time Weight:</label>
+          <input type="range" id="w_tdays" min="0.1" max="3" step="0.1" value="1"
+                 oninput="document.getElementById('w_tdays_val').innerText = this.value;" />
+          <span class="weightValue" id="w_tdays_val">1</span>
+        </div>
+        <div class="form-item">
+          <label for="c_ms">Market Sentiment (MS, 0–100):</label>
+          <input type="number" id="c_ms" step="1" value="50" required />
+        </div>
+        <div class="form-item weight-item">
+          <label for="w_ms">Sentiment Weight:</label>
+          <input type="range" id="w_ms" min="0.1" max="3" step="0.1" value="1"
+                 oninput="document.getElementById('w_ms_val').innerText = this.value;" />
+          <span class="weightValue" id="w_ms_val">1</span>
+        </div>
+        <div class="form-item">
+          <label for="c_slMult">Stop Loss Multiplier:</label>
+          <input type="number" id="c_slMult" step="0.1" value="1" required />
+        </div>
+        <div class="form-item">
+          <label for="c_tpMult">Take Profit Multiplier:</label>
+          <input type="number" id="c_tpMult" step="0.1" value="1" required />
+        </div>
+        <div class="form-item full-width">
+          <button type="button" onclick="calculateCustom()">Calculate Custom Model</button>
+        </div>
+      </form>
+      <div class="result" id="customResult"></div>
+    </section>
+    <section class="model-section glass-panel">
+      <div class="chart-container">
+        <h4>Custom Model Chart</h4>
+        <canvas id="summaryChart"></canvas>
+      </div>
+    </section>
+  </main>
+  
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('Service Worker registered:', reg))
+        .catch(err => console.error('Service Worker registration failed:', err));
+    }
+  </script>
+  <script src="script.js"></script>
+  <script src="chart.js"></script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple Model - Option Calculator</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <!-- Custom Logo -->
+      <div class="logo">
+        <svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="0" width="60" height="60" fill="none" stroke="white" stroke-width="2" />
+          <text x="5" y="45" font-size="40" fill="red" font-family="Arial, sans-serif">O</text>
+          <text x="30" y="45" font-size="40" fill="white" font-family="Arial, sans-serif">s</text>
+        </svg>
+      </div>
+    </div>
+    <div class="header-right">
+      <button id="menuToggle" onclick="toggleMenu()">&#9776;</button>
+    </div>
+  </header>
+  
+  <!-- Sidebar Menu (same as index.html) -->
+  <div id="sidebar" class="sidebar">
+    <button id="closeSidebar" onclick="toggleMenu()">×</button>
+    <nav>
+      <ul>
+        <li><a href="simple.html" class="menu-link">Simple Model</a></li>
+        <li><a href="advanced.html" class="menu-link">Advanced Model</a></li>
+        <li><a href="custom.html" class="menu-link">Custom Model</a></li>
+        <li><a href="explanation.html" class="menu-link">Model Explanation</a></li>
+        <li>
+          <details>
+            <summary>Daily Notes</summary>
+            <div id="notesContainer">
+              <ul id="notesList"></ul>
+              <input type="text" id="noteInput" placeholder="Add a new note" />
+              <button onclick="addNote()">Add Note</button>
+            </div>
+          </details>
+        </li>
+        <li class="spacer"></li>
+        <li>
+          <button id="darkModeButton" onclick="toggleTheme()">Dark Mode</button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  
+  <main class="container">
+    <section class="model-section glass-panel">
+      <h3>Simple Model</h3>
+      <form id="simpleForm" class="form-grid">
+        <div class="form-item">
+          <label for="s_price">Option Price (P):</label>
+          <input type="number" id="s_price" step="0.01" value="5" required />
+        </div>
+        <div class="form-item">
+          <label for="s_delta">Delta (Δ):</label>
+          <input type="number" id="s_delta" step="0.01" value="0.5" required />
+        </div>
+        <div class="form-item">
+          <label for="s_atr">ATR (Average True Range):</label>
+          <input type="number" id="s_atr" step="0.01" value="2" required />
+        </div>
+        <div class="form-item">
+          <label for="s_tdays">Days Till Expiration (T_days):</label>
+          <input type="number" id="s_tdays" step="1" value="30" required />
+        </div>
+        <div class="form-item full-width">
+          <label for="s_k">Risk/Reward Ratio (k) [ref]:</label>
+          <input type="number" id="s_k" step="0.1" value="3" required />
+        </div>
+        <div class="form-item">
+          <label for="s_optionType">Option Type:</label>
+          <select id="s_optionType">
+            <option value="call">Call</option>
+            <option value="put">Put</option>
+          </select>
+        </div>
+        <div class="form-item">
+          <label for="s_transaction">Transaction:</label>
+          <select id="s_transaction">
+            <option value="buy">Buy</option>
+            <option value="sell">Sell</option>
+          </select>
+        </div>
+        <div class="form-item full-width">
+          <button type="button" onclick="calculateSimple()">Calculate Simple Model</button>
+        </div>
+      </form>
+      <div class="result" id="simpleResult"></div>
+    </section>
+    <section class="model-section glass-panel">
+      <div class="chart-container">
+        <h4>Simple Model Chart</h4>
+        <canvas id="summaryChart"></canvas>
+      </div>
+    </section>
+  </main>
+  
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('Service Worker registered:', reg))
+        .catch(err => console.error('Service Worker registration failed:', err));
+    }
+  </script>
+  <script src="script.js"></script>
+  <script src="chart.js"></script>
+</body>
+</html>

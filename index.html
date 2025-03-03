@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Option Calculator - Home</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
+  <!-- Include Chart.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <!-- Custom Logo -->
+      <div class="logo">
+        <svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+          <!-- Square border -->
+          <rect x="0" y="0" width="60" height="60" fill="none" stroke="white" stroke-width="2" />
+          <!-- Letters: adjust positions so they are flush and centered -->
+          <text x="5" y="45" font-size="40" fill="red" font-family="Arial, sans-serif">O</text>
+          <text x="30" y="45" font-size="40" fill="white" font-family="Arial, sans-serif">s</text>
+        </svg>
+      </div>
+    </div>
+    <div class="header-right">
+      <button id="menuToggle" onclick="toggleMenu()">&#9776;</button>
+    </div>
+  </header>
+  
+  <!-- Sidebar Menu -->
+  <div id="sidebar" class="sidebar">
+    <button id="closeSidebar" onclick="toggleMenu()">×</button>
+    <nav>
+      <ul>
+        <li><a href="simple.html" class="menu-link">Simple Model</a></li>
+        <li><a href="advanced.html" class="menu-link">Advanced Model</a></li>
+        <li><a href="custom.html" class="menu-link">Custom Model</a></li>
+        <li><a href="explanation.html" class="menu-link">Model Explanation</a></li>
+        <li>
+          <details>
+            <summary>Daily Notes</summary>
+            <div id="notesContainer">
+              <ul id="notesList"></ul>
+              <input type="text" id="noteInput" placeholder="Add a new note" />
+              <button onclick="addNote()">Add Note</button>
+            </div>
+          </details>
+        </li>
+        <li class="spacer"></li>
+        <li>
+          <button id="darkModeButton" onclick="toggleTheme()">Dark Mode</button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  
+  <main class="container">
+    <h1>Welcome to the Option Calculator</h1>
+    <p>
+      Use the menu (hamburger icon in the top‐right) to navigate between the different models, view a detailed explanation, or manage your daily notes.
+    </p>
+  </main>
+  
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('Service Worker registered:', reg))
+        .catch(err => console.error('Service Worker registration failed:', err));
+    }
+  </script>
+  
+  <script src="script.js"></script>
+  <script src="chart.js"></script>
+</body>
+</html>

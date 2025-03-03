@@ -1,0 +1,312 @@
+/* Base Variables for theming and consistency */
+:root {
+  --primary-color: #0077ff;
+  --primary-hover: #005fcc;
+  --secondary-color: #eee;
+  --dark-text: #ddd;
+  --gradient-start: #1a2a6c;
+  --gradient-mid: #b21f1f;
+  --gradient-end: #fdbb2d;
+  --dark-gradient-start: #0f2027;
+  --dark-gradient-mid: #203a43;
+  --dark-gradient-end: #2c5364;
+  --glass-bg: rgba(255, 255, 255, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --dark-glass-bg: rgba(0, 0, 0, 0.5);
+  --dark-glass-border: rgba(255, 255, 255, 0.2);
+  --font-family: 'Roboto', sans-serif;
+  --transition-fast: 0.2s;
+  --transition-slow: 0.3s;
+}
+
+/* Global Styles */
+body {
+  font-family: var(--font-family);
+  margin: 0;
+  padding: 0;
+  color: var(--secondary-color);
+  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end));
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  transition: background var(--transition-slow), color var(--transition-slow);
+}
+
+/* Animated Gradient */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Header Styling */
+header {
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Custom Logo Styling */
+/* Transparent background with a square white border */
+.logo {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hamburger Menu Button */
+#menuToggle {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: var(--secondary-color);
+}
+
+/* Sidebar Menu (fixed width 300px, slides in from the right) */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -300px;
+  width: 300px;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  color: #fff;
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 20px;
+  transition: right 0.3s ease;
+}
+.sidebar.active {
+  right: 0;
+}
+#closeSidebar {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #fff;
+  cursor: pointer;
+  float: right;
+}
+
+/* Sidebar Navigation */
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.sidebar nav ul li {
+  margin-bottom: 15px;
+}
+.sidebar nav ul li a.menu-link {
+  color: var(--secondary-color);
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+
+/* Spacer to push Dark Mode button to bottom */
+.sidebar nav ul li.spacer {
+  flex: 1;
+}
+
+/* Daily Notes and Delete Button */
+#notesList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 0;
+}
+.note-delete {
+  background: none;
+  border: none;
+  color: #ff4d4d;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+/* Dark Mode Button Styling */
+#darkModeButton {
+  background: var(--primary-color);
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 1rem;
+  padding: 8px 15px;
+  cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+#darkModeButton:hover {
+  transform: scale(1.05);
+  background: var(--primary-hover);
+}
+
+/* Container Layout */
+.container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Glassmorphism Panels */
+.model-section {
+  background: var(--glass-bg);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+}
+.model-section h2,
+.model-section h3 {
+  margin-top: 0;
+  color: #fff;
+}
+
+/* Form Grid Layout */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+.form-item {
+  display: flex;
+  flex-direction: column;
+}
+.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Input Styling */
+input[type="number"],
+select {
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  margin-top: 5px;
+  outline: none;
+  transition: box-shadow var(--transition-fast);
+}
+input[type="number"]:focus,
+select:focus {
+  box-shadow: 0 0 8px rgba(0, 119, 255, 0.5);
+}
+
+/* Weight Slider Container */
+.weightContainer {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+}
+.weightContainer label {
+  font-weight: bold;
+  margin-right: 5px;
+  color: #fff;
+}
+.weightContainer input[type="range"] {
+  width: 100%;
+  max-width: 100px;
+  margin-right: 5px;
+}
+.weightValue {
+  width: 30px;
+  text-align: center;
+  color: #fff;
+}
+
+/* Result Panel Styling */
+.result {
+  margin-top: 10px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+/* Chart Container Styling */
+.chart-container {
+  margin-top: 20px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+.chart-container.small-chart {
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+/* Media Queries */
+@media (max-width: 600px) {
+  body {
+    font-size: 14px;
+  }
+  .container {
+    padding: 5px;
+  }
+  .model-section {
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .form-item {
+    margin-bottom: 5px;
+  }
+  header {
+    padding: 10px;
+  }
+  .logo {
+    width: 50px;
+    height: 50px;
+  }
+  .header-right button {
+    font-size: 0.9rem;
+    padding: 6px 10px;
+  }
+  button {
+    padding: 10px 15px;
+    font-size: 1rem;
+  }
+  input[type="number"], select {
+    font-size: 1rem;
+    padding: 8px;
+  }
+  .chart-container.small-chart {
+    max-width: 100%;
+    margin: 10px auto;
+    padding: 5px;
+  }
+}
+
+/* Dark Mode Adjustments */
+body.dark {
+  background: linear-gradient(135deg, var(--dark-gradient-start), var(--dark-gradient-mid), var(--dark-gradient-end));
+  color: var(--dark-text);
+}
+body.dark header {
+  background: rgba(0, 0, 0, 0.7);
+}
+body.dark .model-section {
+  background: var(--dark-glass-bg);
+  border-color: var(--dark-glass-border);
+}
+body.dark .result {
+  background: rgba(0, 0, 0, 0.7);
+  border-color: var(--dark-glass-border);
+}
+body.dark .chart-container {
+  background: var(--dark-glass-bg);
+  border-color: var(--dark-glass-border);
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Model Explanation - Option Calculator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <!-- Custom Logo -->
+      <div class="logo">
+        <svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="0" width="60" height="60" fill="none" stroke="white" stroke-width="2" />
+          <text x="5" y="45" font-size="40" fill="red" font-family="Arial, sans-serif">O</text>
+          <text x="30" y="45" font-size="40" fill="white" font-family="Arial, sans-serif">s</text>
+        </svg>
+      </div>
+    </div>
+    <div class="header-right">
+      <a href="index.html" class="menu-link">Back</a>
+    </div>
+  </header>
+  
+  <main class="container explanation">
+    <h2>Model Explanation</h2>
+    <p>
+      Welcome to the Option Calculator’s Model Explanation page. Here you will find a detailed, organized breakdown of how each model works:
+    </p>
+    <section>
+      <h3>Simple Model</h3>
+      <p>
+        The Simple Model uses basic risk factors such as Delta and Average True Range (ATR) to compute Stop Loss and Take Profit levels. A risk metric (R/P) is calculated and then mapped via a sigmoid function to produce a normalized risk level (1–10), which is then used to determine trade parameters.
+      </p>
+    </section>
+    <section>
+      <h3>Advanced Model</h3>
+      <p>
+        The Advanced Model incorporates additional factors like Absolute Theta, Implied Volatility, Market Sentiment, and Open Interest. A composite sensitivity score (Q) is computed with these inputs and is used to refine the calculation of Stop Loss and Take Profit levels.
+      </p>
+    </section>
+    <section>
+      <h3>Custom (Weighted) Model</h3>
+      <p>
+        The Custom Model allows you to assign custom weights to various inputs such as Delta, ATR, Stock Price ratios, and Market Sentiment. This personalization results in a weighted composite score (Q_custom) that reflects your trading style, and subsequently determines trade parameters.
+      </p>
+    </section>
+    <section>
+      <h3>General Notes</h3>
+      <p>
+        All models adjust calculations based on the type of option (Call or Put) and the nature of the transaction (Buy or Sell). The risk levels are mapped to qualitative labels ranging from “Very Favorable” to “Very Risky.”
+      </p>
+    </section>
+  </main>
+</body>
+</html>

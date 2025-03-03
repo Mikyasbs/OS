@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="60" height="60" fill="none" stroke="white" stroke-width="2" />
+  <text x="5" y="45" font-size="40" fill="red" font-family="Arial, sans-serif">O</text>
+  <text x="30" y="45" font-size="40" fill="white" font-family="Arial, sans-serif">s</text>
+</svg>
